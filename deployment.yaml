@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chatapp-deployment
+  labels:
+    app: chatapp
+spec:
+  replicas: 2  # Adjust based on load
+  selector:
+    matchLabels:
+      app: chatapp
+  template:
+    metadata:
+      labels:
+        app: chatapp
+    spec:
+      containers:
+        - name: chatapp
+          image: chatpp:v1  # Replace with your actual image
+          ports:
+            - containerPort: 3000
+          env:
+            - name: NODE_ENV
+              value: "production"
+          resources:
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+            requests:
+              memory: "128Mi"
+              cpu: "250m"
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 15
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: chatapp-service
+spec:
+  selector:
+    app: chatapp
+  ports:
+    - protocol: TCP
+      port: 80        # External port
+      targetPort: 3000 # Matches containerPort
+  type: ClusterIP  # Use LoadBalancer for cloud-based services (ClusterIP, Loadbalancer)
+
