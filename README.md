@@ -27,53 +27,53 @@ Docker and Minikube (Linux).
 Docker-desktop with Kubernetes enabled.(Windows).
 
 ## How to use locally
-1. Clone the repo:-
+### 1. Clone the repo:-
     $ git clone https://github.com/akbhatisain/Chat-Socket.io
-2. Switch to project directory:
+### 2. Switch to project directory:
     $ cd Chat-Socket.io
-3. Setup the project:
+### 3. Setup the project:
     $ npm i
     $ npm start
 4. Test your environment :- Search on your browser http://localhost:3000.
 5. Once you finish with testing Stop the server with Ctrl+c in terminal.
 
 ## Dockerize the Application
-1. Create a Docker Image
+### 1. Create a Docker Image
     $ docker build -t chatapp:v1 ./
 
-2. Run the container 
+### 2. Run the container 
     $ docker run -itd -p 3001:3000 --name chat-app chatapp:v1
 
-3. Checking the container:-
+### 3. Checking the container:-
     $ Docker ps
 
-4. Details about the container
+### 4. Details about the container
     $ docker container inspect <CONTAINER ID>
 
 5. Test your environment :- Search on your browser http://localhost:3000. OR http://127.0.0.1:3000
 
-6. Once you finish with testing destroy the container.
+### 6. Once you finish with testing destroy the container.
     $ docker rm <CONTAINER ID>
 
 ## Deploy Chatapp service on Kubernetes:-
-1. Install NGINX ingress controller:-
+### 1. Install NGINX ingress controller:-
     $ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/cloud/deploy.yaml
 
-2. Review the Ingress Controller:-
+### 2. Review the Ingress Controller:-
     $ kubectl get pods -n ingress-nginx
     NAME                                       READY   STATUS      RESTARTS      AGE
     ingress-nginx-admission-create-4fgnz       0/1     Completed   0             46h
     ingress-nginx-admission-patch-kkg95        0/1     Completed   1             46h
     ingress-nginx-controller-cbb88bdbc-w7vx8   1/1     Running     1 (29m ago)   46h
 
-3. Review the Ingress Controller service:-
+### 3. Review the Ingress Controller service:-
     $ kubectl get svc -n ingress-nginx
 
-4. Deploy the stack (Deployemnt, Service) 
+### 4. Deploy the stack (Deployemnt, Service) 
     $ kubectl apply -f deployment.yaml
     $ kuberctl apply -f ingress.yaml
 
-5. check the resources:
+### 5. check the resources:
     $ kubectl get node
     $ kubectl get deploy
     $ kubectl get svc
@@ -107,45 +107,45 @@ Note: Here you can see that the Ingress Controller is running on localhost (Exte
 🖥️ To run your application with domain Map "friends.com" to Localhost
 Since your Ingress Controller is running on localhost, you must update your Windows/Linux hosts file to resolve friends.com:
 
-1. Open Notepad as Administrator.
+### 1. Open Notepad as Administrator.
 Open: C:\Windows\System32\drivers\etc\hosts
 Add this line:
 127.0.0.1 friends.com
 Save and close the file.
 
-2. In powershell Flush the DNS cache
-ipconfig /flushdns
+### 2. In powershell Flush the DNS cache
+    $ ipconfig /flushdns
 
 🔬 Test If It Works
 Now, test if your Ingress is forwarding traffic correctly:
     $ curl -v http://friends.com
 or open http://friends.com in your browser.
 
-## Troubleshooting Resources:-
+###  Troubleshooting Resources:-
 
     $ kubectl describe ingress chatapp-ingress
     $ kubectl logs -n ingress-nginx -l app.kubernetes.io/name=ingress-nginx
 
-## Clean up the resources:-
+### Clean up the resources:-
     $ kubectl delete deployment chatapp-deployment
     $ kubectl delete service chatapp-service
     $ kubectl delete ingress chatapp-ingress
 
-# Add auto-scaling in your local Docker Desktop Kubernetes cluster
+### Add auto-scaling in your local Docker Desktop Kubernetes cluster
 
-## 1. Ensure the Metrics Server Is Running:
+### 1. Ensure the Metrics Server Is Running:
     $ kubectl get pods -n kube-system
                 OR
     $ kubectl get pods -n kube-system | grep metrics-server
 
-If you don’t see a running metrics server, you can install one using:
-Please consider this below command only if you are not fully  familiar with the Kubernetes.
+If you don’t see a running metrics server, you can install one.
+### Please consider this below command only if you are not fully  familiar with the Kubernetes.
     $ kubectl apply -f metrics-server.yaml
               OR
-You can also use the following command to install the metrics server:(Additional changes needed)
+### You can also use the following command to install the metrics server:(Additional changes needed)
     $ kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
 
-Wait a couple of minutes, then verify again.
+### Wait a couple of minutes, then verify again.
     $ kubectl get pods -n kube-system
     $ kubectl get pods -n kube-system -l k8s-app=metrics-server
 
@@ -162,11 +162,11 @@ Wait a couple of minutes, then verify again.
     $ kubectl top nodes
     $ kubectl top pods
 
-## 2. Create an HPA for Your Deployment
+### 2. Create an HPA for Your Deployment
     $ kubectl apply -f hpa.yaml
     $ kubectl get hpa
 
-## Troubleshooting Parts:-
+### Troubleshooting Parts:-
     $kubectl top nodes
     $kubectl top pods
 
@@ -181,7 +181,7 @@ Wait a couple of minutes, then verify again.
     $ kubectl logs -n kube-system metrics-server-55c8cb4bfc-pprf9
     $ kubectl delete pod metrics-server-d5865ff47-5kkkt -n kube-system
 
-## 3. Testing Auto-scaling
+### 3. Testing Auto-scaling
     $ for i in {1..100}; do curl -s http://friends.com > /dev/null; done
 
 ### Simulate Load to Trigger Scaling: To trigger auto-scaling, we can generate CPU load:
