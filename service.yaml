@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: chatapp-service
+spec:
+  selector:
+    app: chatapp
+  ports:
+    - protocol: TCP
+      port: 80        # External port
+      targetPort: 3000 # Matches containerPort
+  type: LoadBalancer  # Use LoadBalancer for cloud-based services
