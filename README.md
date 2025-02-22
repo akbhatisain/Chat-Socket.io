@@ -46,15 +46,13 @@ Docker-desktop with Kubernetes enabled.(Windows).
 
 3. Checking the container:-
     $ Docker ps
-   CONTAINER ID   IMAGE        COMMAND                 CREATED         STATUS          PORTS                   NAMES
-   d80e0cca493c   chatapp:v1   "docker-entrypoint.s…"  1 minutes ago  Up 1 minutes   0.0.0.0:3001->3000/tcp  chatapp
 
-5. Details about the container
+4. Details about the container
     $ docker container inspect <CONTAINER ID>
 
-6. Test your environment :- Search on your browser http://localhost:3000. OR http://127.0.0.1:3000
+5. Test your environment :- Search on your browser http://localhost:3000. OR http://127.0.0.1:3000
 
-7. Once you finish with testing destroy the container.
+6. Once you finish with testing destroy the container.
     $ docker rm <CONTAINER ID>
 
 ## Deploy Chatapp service on Kubernetes:-
@@ -133,13 +131,6 @@ kubectl delete deployment chatapp-deployment
 kubectl delete service chatapp-service
 kubectl delete ingress chatapp-ingress
 
-
-🚀 Final Checklist
-✅ Ingress Class set to nginx
-✅ Ingress is correctly routing to chatapp-service
-✅ Windows hosts file maps friends.com to 127.0.0.1
-✅ Ingress Controller logs show no errors
-
 ## Add auto-scaling in your local Docker Desktop Kubernetes cluster
 
 1. Ensure the Metrics Server Is Running:
@@ -213,5 +204,11 @@ if you are testing locally then use below command:-
 while true; do echo "scale test" | sha256sum; done
 
 Ctrl+C to exit the load-generator pod.
+
+🚀 Final Checklist
+✅ Ingress Class set to nginx
+✅ Ingress is correctly routing to chatapp-service
+✅ Windows hosts file maps friends.com to 127.0.0.1
+✅ Ingress Controller logs show no errors
 
 Try these steps and let me know what errors you get! 🚀🔥
