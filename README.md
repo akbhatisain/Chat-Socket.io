@@ -44,17 +44,17 @@ Docker-desktop with Kubernetes enabled.(Windows).
 2. Run the container 
     $ docker run -itd -p 3001:3000 --name chat-app chatapp:v1
 
-3. Checking the container
+3. Checking the container:-
     $ Docker ps
-    CONTAINER ID   IMAGE        COMMAND                 CREATED         STATUS          PORTS                   NAMES
-    d80e0cca493c   chatapp:v1   "docker-entrypoint.s…"  1 minutes ago  Up 1 minutes   0.0.0.0:3001->3000/tcp  chatapp
+   CONTAINER ID   IMAGE        COMMAND                 CREATED         STATUS          PORTS                   NAMES
+   d80e0cca493c   chatapp:v1   "docker-entrypoint.s…"  1 minutes ago  Up 1 minutes   0.0.0.0:3001->3000/tcp  chatapp
 
-4. Details about the container
+5. Details about the container
     $ docker container inspect <CONTAINER ID>
 
-5. Test your environment :- Search on your browser http://localhost:3000. OR http://127.0.0.1:3000
+6. Test your environment :- Search on your browser http://localhost:3000. OR http://127.0.0.1:3000
 
-6. Once you finish with testing destroy the container.
+7. Once you finish with testing destroy the container.
     $ docker rm <CONTAINER ID>
 
 ## Deploy Chatapp service on Kubernetes:-
