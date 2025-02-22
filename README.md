@@ -184,14 +184,13 @@ Wait a couple of minutes, then verify again.
 ## 3. Testing Auto-scaling
     $ for i in {1..100}; do curl -s http://friends.com > /dev/null; done
 
-###Simulate Load to Trigger Scaling:
-To trigger auto-scaling, we can generate CPU load:
+### Simulate Load to Trigger Scaling: To trigger auto-scaling, we can generate CPU load:
     $ kubectl run -i --tty load-generator --rm --image=busybox -- /bin/sh
 
-Inside the pod run below command:-
+### Inside the pod run below command:-
     $ while true; do wget -q -O- http://<your-service-ip>:<port>; done
-    OR
-if you are testing locally then use below command:-
+
+### if you are testing locally then use below command:-
     $ while true; do echo "scale test" | sha256sum; done
 
 Ctrl+C to exit the load-generator pod.
