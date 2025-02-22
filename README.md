@@ -118,90 +118,81 @@ ipconfig /flushdns
 
 🔬 Test If It Works
 Now, test if your Ingress is forwarding traffic correctly:
-curl -v http://friends.com
+    $ curl -v http://friends.com
 or open http://friends.com in your browser.
 
 ## Troubleshooting Resources:-
 
-kubectl describe ingress chatapp-ingress
-kubectl logs -n ingress-nginx -l app.kubernetes.io/name=ingress-nginx
+    $ kubectl describe ingress chatapp-ingress
+    $ kubectl logs -n ingress-nginx -l app.kubernetes.io/name=ingress-nginx
 
 ## Clean up the resources:-
-kubectl delete deployment chatapp-deployment
-kubectl delete service chatapp-service
-kubectl delete ingress chatapp-ingress
+    $ kubectl delete deployment chatapp-deployment
+    $ kubectl delete service chatapp-service
+    $ kubectl delete ingress chatapp-ingress
 
-## Add auto-scaling in your local Docker Desktop Kubernetes cluster
+# Add auto-scaling in your local Docker Desktop Kubernetes cluster
 
-1. Ensure the Metrics Server Is Running:
-$ kubectl get pods -n kube-system
+## 1. Ensure the Metrics Server Is Running:
+    $ kubectl get pods -n kube-system
                 OR
-$ kubectl get pods -n kube-system | grep metrics-server
+    $ kubectl get pods -n kube-system | grep metrics-server
 
 If you don’t see a running metrics server, you can install one using:
 Please consider this below command only if you are not fully  familiar with the Kubernetes.
-$ kubectl apply -f metrics-server.yaml
+    $ kubectl apply -f metrics-server.yaml
               OR
 You can also use the following command to install the metrics server:(Additional changes needed)
-$ kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+    $ kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
 
 Wait a couple of minutes, then verify again.
-$ kubectl get pods -n kube-system
+    $ kubectl get pods -n kube-system
+    $ kubectl get pods -n kube-system -l k8s-app=metrics-server
 
-$ kubectl get pods -n kube-system -l k8s-app=metrics-server
-NAME                              READY   STATUS    RESTARTS   AGE
-metrics-server-6574b5696c-rcd8c   1/1     Running   0          3m8s
+### Check Pods
+    $ kubectl get pods -n kube-system -l k8s-app=metrics-server
 
-# Check Pods
-kubectl get pods -n kube-system -l k8s-app=metrics-server
+### Check APIService Status
+    $ kubectl get apiservice v1beta1.metrics.k8s.io -o yaml
 
-# Check APIService Status
-kubectl get apiservice v1beta1.metrics.k8s.io -o yaml
+### Check Metrics Server Logs
+    $ kubectl logs -n kube-system metrics-server-7555b99666-9cdrl
 
-# Check Metrics Server Logs
-kubectl logs -n kube-system metrics-server-7555b99666-9cdrl
+### Test Metrics
+    $ kubectl top nodes
+    $ kubectl top pods
 
-# Test Metrics
-kubectl top nodes
-kubectl top pods
+## 2. Create an HPA for Your Deployment
+    $ kubectl apply -f hpa.yaml
+    $ kubectl get hpa
 
-
-2. Create an HPA for Your Deployment
-$ kubectl apply -f hpa.yaml
-
-$ kubectl get hpa
-
-
-### Troubleshooting Parts:-
-
-$kubectl top nodes
-$kubectl top pods
+## Troubleshooting Parts:-
+    $kubectl top nodes
+    $kubectl top pods
 
 ### Remove the Existing Metrics-Server Pods
-kubectl delete deployment metrics-server -n kube-system
-kubectl get pods -n kube-system -l k8s-app=metrics-server
-kubectl delete pod <pod-name> -n kube-system
+    $ kubectl delete deployment metrics-server -n kube-system
+    $ kubectl get pods -n kube-system -l k8s-app=metrics-server
+    $ kubectl delete pod <pod-name> -n kube-system
 
 ### Reomve HPA 
-kubectl delete hpa chatapp-hpa
-kubectl get hpa
+    $ kubectl delete hpa chatapp-hpa
+    $ kubectl get hpa
+    $ kubectl logs -n kube-system metrics-server-55c8cb4bfc-pprf9
+    $ kubectl delete pod metrics-server-d5865ff47-5kkkt -n kube-system
 
-kubectl logs -n kube-system metrics-server-55c8cb4bfc-pprf9
-
-kubectl delete pod metrics-server-d5865ff47-5kkkt -n kube-system
-
-3. Testing Auto-scaling
-$for i in {1..100}; do curl -s http://friends.com > /dev/null; done
+## 3. Testing Auto-scaling
+    $ for i in {1..100}; do curl -s http://friends.com > /dev/null; done
 
 ###Simulate Load to Trigger Scaling:
 To trigger auto-scaling, we can generate CPU load:
-kubectl run -i --tty load-generator --rm --image=busybox -- /bin/sh
+    $ kubectl run -i --tty load-generator --rm --image=busybox -- /bin/sh
 
 Inside the pod run below command:-
-while true; do wget -q -O- http://<your-service-ip>:<port>; done
-OR
+    $ while true; do wget -q -O- http://<your-service-ip>:<port>; done
+    OR
 if you are testing locally then use below command:-
-while true; do echo "scale test" | sha256sum; done
+    $ while true; do echo "scale test" | sha256sum; done
 
 Ctrl+C to exit the load-generator pod.
 
